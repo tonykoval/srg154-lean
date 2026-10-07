@@ -7,3 +7,8 @@ import Srg154.DualVector
 import Srg154.GenusI
 import Srg154.GenusII
 import Srg154.Main
+import Srg154.VertexLattice
+import Srg154.DiscForm
+import Srg154.Gauss17
+import Srg154.FiniteForms
+import Srg154.GenusIReduce
