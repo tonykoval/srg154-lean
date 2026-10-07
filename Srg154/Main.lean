@@ -10,10 +10,12 @@ import Srg154.GenusII
 `no_host_conditional` says: neither of the two host configurations of Proposition `prop:forms` can exist,
 where each configuration is packaged with exactly the hypotheses that are NOT formalised here
 (gluing / Niemeier E2 for genus I; gluing, the frame identity E3 and the 7-design property E4 for genus II;
-and, in both, the lattice facts that turn a dual vector of `N` into integer data for `dual_vector_witness`).
+and, in both, the gluing facts that put the projections of the glued lattice into `N^#`).
+The graph side is formal: `graph_to_eq_adm` (VertexLattice.lean) proves `(eq:adm)` for every `x ∈ N^#` of every
+maximal even overlattice, and `forms_classification` (FiniteForms.lean) gives the two genera given Milgram.
 
-The step "srg(154,72,26,40) exists ⇒ one of the two packages exists" (vertex lattice, `y = s/119`, maximal even
-overlattice, Milgram's formula, gluing) is NOT formalised; see README.md.
+The step "srg(154,72,26,40) exists ⇒ one of the two packages exists" is not ONE formal theorem: Milgram's formula, the
+finite-module packaging of D(N), gluing and E2-E4 are missing; see README.md.
 -/
 
 namespace Srg154

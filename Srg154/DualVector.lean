@@ -11,7 +11,7 @@ We prove, for ANY `w` and directly from `G.IsSRGWith 154 72 26 40` (no lattice t
   `𝒢² = 18 𝒢 + 340 J`, hence `∑ z² = 18 x² + (5/17) ℓ²` and `A z = -16 z + 4ℓ 𝟙`, where `7ℓ = ∑ z`.
 
 Consequently, whenever `z` is integral, `51 x² = m ∈ ℤ` and `∑ z = 7ℓ` with `ℓ ∈ ℤ` (these three facts are
-what Lemmas `lem:y`, `lem:max` and Proposition `prop:forms` provide for `x ∈ N^#`; they are NOT formalised),
+what Lemmas `lem:y`, `lem:max` and Proposition `prop:forms` provide for `x ∈ N^#`; they are proved from the graph in `VertexLattice.lean`, see `eq_adm`),
 `(m, ℓ)` has a witness with `Γᵢ = Γ(i)`, the neighbourhood of `i`.  This is equation `(eq:adm)`, i.e. the only
 way the graph enters the rest of the proof.
 -/
