@@ -70,3 +70,4 @@
 'Srg154.lemA1_geom' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Srg154.A1_24_roots' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Srg154.genusI_impossible_general' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Srg154.finrank_W' depends on axioms: [propext, Classical.choice, Quot.sound]

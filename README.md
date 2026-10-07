@@ -16,17 +16,17 @@ Status (2026-10-07): **all files compile, 0 `sorry`, 0 `admit`, 0 `native_decide
 
 ```bash
 lake exe cache get     # downloads the Mathlib build cache (~9000 files); do NOT build Mathlib from source
-lake build             # builds the 9 project files + root module
-lake env lean Axioms.lean   # prints the axioms of the 35 main theorems
+lake build             # builds the 15 project files + root module
+lake env lean Axioms.lean   # prints the axioms of the 73 audited theorems
 ```
 
-Build time of the project after the cache download: **about 50–80 s** on 4 cores (48 s incremental-clean, 78 s in a fresh directory) (x86_64 Linux, docker
+Build time of the project after the cache download: **about 90–110 s** on 4 cores (92–108 s in a fresh directory) (x86_64 Linux, docker
 `srg-queue`). The slowest file is `Certificates.lean` at about 10 s, which includes the kernel evaluation of all 521
 certificates. Built and audited at `/root/lean154` inside the container; this folder is the canonical copy.
 
 ## Axioms (`lake env lean Axioms.lean`, full output in `tools/axioms_output.txt`)
 
-Every audited theorem depends only on `[propext, Classical.choice, Quot.sound]` (31 theorems) or `[propext]` (4 pure
+Every audited theorem depends only on `[propext, Classical.choice, Quot.sound]` (69 theorems) or `[propext]` (4 pure
 `decide +kernel` facts). **No `sorryAx`, no `Lean.ofReduceBool`/`trustCompiler`.** All finite computations use
 `decide +kernel`, so they are checked by the Lean kernel; the compiler is not trusted anywhere.
 
@@ -43,25 +43,41 @@ Every audited theorem depends only on `[propext, Classical.choice, Quot.sound]` 
 | `Srg154/GenusII.lean` | §§`sec:dict`–`sec:rootless` (items 3, 4) | `gram_bound` (Gram determinant, proved). `Config` = glue data of Prop `prop:dict` + `(eq:adm)` as hypotheses. **Pins derived in Lean from the certificates**: `no_units` (a), `root_pin` (b), `char_pin` (c), `norm3_pin` (d). `theoremA`: frame identity (hypothesis) ⇒ no roots. `theoremB`: 7-design moments (hypothesis) ⇒ roots. `genusII_impossible`. |
 | `Srg154/GenusI.lean` | §`sec:genusI` (item 5) | `projI_spec`: the projection formula `(eq:projI)`. `lemmaA1_arith`: arithmetic of Lemma `lem:A1`. `dodecad`: weight 12, five entries ±3, Σ\|x\| = 22. `genusI_impossible`: in the A₁²⁴ coordinates given by E2, the witness ξ = sign(x)/√2 has 51π(ξ)² = 60, which is forbidden. |
 | `Srg154/Main.lean` | §`sec:proof` | `no_host_conditional`: neither host package (`GenusIHost`, `GenusIIHost`) can exist. `design_constants`: ν = 600, 216, 120 and the value −2880. |
+| `Srg154/VertexLattice.lean` | §`sec:vertex`: Lemmas `lem:M`, `lem:y`, `lem:max`, `lem:V`; last sentence of Prop `prop:forms` | **From `G.IsSRGWith 154 72 26 40` alone.** `exists_rep`: vertex vectors with Gram −A+2I+2J exist (PSD via 𝒢 = 𝒢'ᵀ𝒢'/18 + (17/11)J, 𝒢'² = 18𝒢'). For ANY such family `v` in ANY real inner product space (`IsRep`), with `W` = span: `lemM` (M = 18I + (5/833)ssᵀ on W), `s_sq` (s² = 36652), `lemY` (119 ∣ ⟨s,x⟩ for every integral N ⊇ L in W), `y_sq` (y² = 44/17), `inner_v_y`, `lemM_y` (M = 18I + 85yyᵀ). `MaxEven` = maximal even subgroup of W containing L (no discreteness assumed); `exists_maxEven` (Zorn). Lemma `lem:max`: `seventeen_y_mem`, `y_not_mem` (a), `lemMax_b`, `mul306_mem` (b), `mem_of_dual_even` (c, anisotropy). `parity` (the parity fact), `d2_int`, `d3_elem`, `mul102_mem` (exponent of D(N) divides 102), `norm51` (51x² ∈ ℤ on N^#, **without Milgram**). `eq_adm`, `eq_adm_hasWitness`: **equation `(eq:adm)` from the graph** for every x ∈ N^#, with m ≡ 2ℓ² (mod 17). Capstone `graph_to_eq_adm`. |
+| `Srg154/Rank.lean` | §`sec:vertex` ("rank 22") | `finrank_W`: for every `IsRep` family, dim W = 22 (idempotent E = 𝒢'/18 + J/154 of trace 22 with ker E = ker 𝒢). This is the signature 22 in Milgram's formula. |
+| `Srg154/DiscForm.lean` | proof of Prop `prop:forms` up to Milgram | Phrased for representatives x ∈ N^# (no quotient group built): `primary_decomp` (D = D₂⊕D₃⊕D₁₇), `coprime_orth`, `d17_cyclic` (D₁₇ = ⟨ȳ⟩), `y_sq_mod` (q(ȳ) ≡ 10/17), `d2_odd` (q ≡ 1 on D₂∖0), `d2_rank` (dim D₂ ≤ 2), `d3_norm` (q ∈ (2/3)ℤ on D₃, ≢ 0 off 0), `d3_rank` (dim D₃ ≤ 2; `ternary_isotropic_F3`: every ternary form over 𝔽₃ is isotropic, by `decide`). |
+| `Srg154/Gauss17.lean` | Prop `prop:forms`, "Gauss sum of ⟨10/17⟩ is −√17" | `gauss17`: ∑_{x mod 17} e^{πi·10x²/17} = −√17 (**proved**: S² = 17 by character orthogonality with Mathlib's `ZMod.stdAddChar`, sign by cosine bounds Re S ≤ 3 < √17). So Br⟨10/17⟩ = 4 is not a hypothesis. |
+| `Srg154/FiniteForms.lean` | Prop `prop:forms`, Milgram step | Finite model `Cand` = (dim D₂, dim D₃, the 𝔽₃-form of D₃), `Valid` = the vector-level facts of DiscForm; `gaussTotal` = the Gauss sum of D₂⊕D₃⊕⟨10/17⟩ in ℂ; `Milgram c` = Milgram's formula with signature 22 (**hypothesis**: not in Mathlib). `classification_finite` (kernel exhaustion over 243 candidates), `milgram_int`, **`forms_classification`**: Valid + Milgram ⇒ form (I) ⟨2/3⟩⊕⟨10/17⟩ or form (II) V₂⊕⟨4/3⟩⊕⟨10/17⟩; `det_cases`: \|D\| ∈ {51, 204}; `formI_milgram`, `formII_milgram`: both satisfy Milgram (so exactly two). |
+| `Srg154/GenusIReduce.lean` | Lemma `lem:A1`, start of Thm `thm:genusI` | `lemA1_geom`: Lemma `lem:A1` in any real inner product space (α = 0, β ∈ {0,±1,±3}). `A1_24_roots`: the roots of the A₁²⁴ model are ±√2eᵢ, from the code weights alone. `genusI_impossible_general`: Theorem `thm:genusI` for an ARBITRARY root r of the model (the renumbering/sign change "r = √2e₁" is done in Lean, the code replaced by its image). |
 | `Srg154.lean`, `Axioms.lean` | | root import; axiom audit |
 
 ## What is assumed (hypotheses, never axioms)
 
 The step "an srg(154,72,26,40) exists ⇒ one of the two host packages of `Main.lean` exists" is **not**
-formalised. In detail:
+formalised as a single theorem. In detail (updated 2026-10-07, second pass):
 
-1. **Vertex lattice and dual vectors** (§3): the existence of the vectors vᵢ ∈ ℝ²² with Gram −A+2I+2J (the PSD/rank
-   statement is not proved; the spectrum is), the lattice L, y = s/119, Lemma `lem:y`, the maximal even
-   overlattice and Lemma `lem:max`. These lemmas provide, for x ∈ N^#, the integrality of z, of 51x² and of
-   ℓ = Σz/7. Given that integrality, `dual_vector_witness` **is** the formal bridge from the graph to `(eq:adm)`.
-2. **Two genera** (Prop `prop:forms`: Milgram's formula, Chevalley–Warning, anisotropy). Not formalised.
+1. **Vertex lattice and dual vectors** (§3): **now formal** (`VertexLattice.lean`, `Rank.lean`). From
+   `G.IsSRGWith 154 72 26 40` alone: vertex vectors exist, span a space of dimension 22, a maximal even
+   overlattice N exists, and for EVERY maximal even overlattice and every x ∈ N^#: z ∈ ℤ¹⁵⁴, ℓ = 17⟨y,x⟩ ∈ ℤ,
+   51x² ∈ ℤ, and `(eq:adm)` holds (`eq_adm`, `graph_to_eq_adm`). "Lattice" means here an even additive subgroup
+   of the span W; discreteness is never used, so no lattice framework is needed.
+2. **Two genera** (Prop `prop:forms`): **formal except two inputs.** Proved: the primary decomposition, D₁₇ = ⟨ȳ⟩
+   with q ≡ 10/17, D₂ elementary with q ≡ 1 off 0 and rank ≤ 2, D₃ elementary anisotropic of rank ≤ 2
+   (Chevalley–Warning for ternary forms over 𝔽₃ by exhaustion), 51x² ∈ ℤ (which needs no Milgram), the Gauss
+   sum −√17 of ⟨10/17⟩, rank 22, and the finite classification: a candidate satisfying Milgram's formula is
+   (I) or (II), |D| ∈ {51, 204}, and both satisfy it. **Not formal:** (a) Milgram's formula itself (the
+   hypothesis `Milgram c`; not in Mathlib); (b) the packaging of D(N) = N^#/N as a finite quadratic module and
+   its identification with a candidate `c` (choice of bases of D₂, D₃; nondegeneracy). The vector-level facts
+   that make the candidate `Valid` are proved in `DiscForm.lean`.
 3. **Gluing** (Lemmas `lem:glue`, `lem:test`, Prop `prop:dict`, `(eq:projII)`). Not formalised. They enter as the
    fields of `Config` (U integral, w, u ∈ U with w² = 51, u² = 7, ⟨u,w⟩ = 15) and its two `(eq:adm)` hypotheses
    `adm_proj` and `adm_char`, and as the field `adm` of `GenusIHost`. For genus I the projection formula itself
-   **is** proved (`projI_spec`).
-4. **E2 (Niemeier / Golay)**: that X ≅ A₁²⁴ in coordinates with r = √2e₀, f = x/√2, and that the Golay code has
-   weights 0, 8, 12, 16, 24. These are hypotheses of `genusI_impossible`. The arithmetic step of Lemma `lem:A1`
-   that justifies using E2 is proved (`lemmaA1_arith`).
+   **is** proved (`projI_spec`). (Note: `(eq:adm)` for x ∈ N^# is now a theorem; what is missing is that the
+   projections π(v) of the glued lattice lie in N^#.)
+4. **E2 (Niemeier / Golay)**: that X ≅ A₁²⁴ (as the doubled-coordinate model with a code 𝒢) and that the Golay
+   code has weights 0, 8, 12, 16, 24. These remain hypotheses. **Now formal:** Lemma `lem:A1` in geometric form
+   (`lemA1_geom`), the roots of the model are ±√2eᵢ (`A1_24_roots`, from the weights alone), and the
+   normalisation r = √2e₀ (`genusI_impossible_general` takes an arbitrary root r of the model).
 5. **E3, the frame identity** (Theorem `thm:frameid`, K105 / Nebe–Venkov). It is a hypothesis of `theoremA`,
    required only for unit-free U. Unit-freeness is **proved** (`no_units`).
 6. **E4, the 7-design property** (Lemma `lem:design`: moments 600, 216, 120 on the 4600 norm-3 vectors). It is a
@@ -100,20 +116,23 @@ No classification-dependent fact (the 49 unit-free lattices, O₂₃) is used, a
   independent formal routes, including the printed Appendix-A tables line by line); Lemma `lem:special`; the key
   norm 20/17; the Gram bounds; pins (a)–(d) as consequences of `(eq:adm)`; the inequality argument of Theorem A;
   the design-polynomial argument of Theorem B (sum −2880); the projection formula, the A₁-component arithmetic and
-  the dodecad witness of genus I.
-* **Hypotheses:** everything that turns the graph into lattices: the vertex lattice, the maximal overlattice,
-  Milgram and the two genera, gluing and the dictionary, and E2/E3/E4. These are the standard lattice and
+  the dodecad witness of genus I. **Second pass:** the vertex vectors (PSD, rank 22), y = s/119, Lemmas
+  `lem:M`/`lem:y`/`lem:max`/`lem:V`, existence of a maximal even overlattice, `(eq:adm)` for every x ∈ N^# from
+  the graph; the structure of D(N) up to Milgram; the Gauss sum of ⟨10/17⟩; the Milgram classification as a
+  finite computation; Lemma `lem:A1` geometrically, the roots of A₁²⁴ and the coordinate normalisation.
+* **Hypotheses:** Milgram's formula and the identification of D(N) with a finite candidate form; gluing and the
+  dictionary; E2 (Niemeier classification, Golay weights), E3, E4. These are the standard lattice and
   modular-forms inputs. The paper's own "computer-assembled" part (the certificate table, residual point 2 of
-  §`sec:residual`) is now **fully kernel-checked**.
-* Roughly: of the 7 steps in the paper's Table `tab:status`, step 3 is complete and formal. Steps 4–7 are formal
-  in their combinatorial and inequality core, conditional on the stated inputs. Steps 1–2 are formal only in
-  their graph-side identities (spectrum, `dual_vector_witness`); the lattice-theoretic parts are assumed.
+  §`sec:residual`) is **fully kernel-checked**.
+* Roughly: of the 7 steps in the paper's Table `tab:status`, steps 1 and 3 are complete and formal, step 2 is
+  formal up to Milgram's formula and the finite-module packaging of D(N), steps 4–7 are formal in their
+  combinatorial and inequality core, conditional on the stated inputs.
 
 ## Layout
 
 ```
 lakefile.toml  lean-toolchain  lake-manifest.json  Srg154.lean  Axioms.lean  README.md
-Srg154/        the 9 source files
+Srg154/        the 15 source files
 tools/         build.sh, check.sh (docker helpers), gen_tables.py, compare_pairs.py, pairs521_lean.txt,
                dump.lean, ctrl_eval.lean, neg_test.sh, axioms_output.txt
 ```
@@ -131,3 +150,19 @@ rooted and rootless configurations), so the conclusions are not vacuous. Clarifi
 - Not formalized (eight groups): PSD representation and vertex lattice; y and the maximal even overlattice;
   discriminant forms / the two genera; gluing dictionaries; the geometric genus-I reduction to A1^24; the frame identity
   (E3); the 7-design property (E4); the final graph-to-host assembly.
+
+### Status of the eight groups after the second pass (2026-10-07)
+
+| # | group (review C29) | status now | where |
+|---|---|---|---|
+| 1 | PSD representation and vertex lattice | **formal** (vectors exist, Gram −A+2I+2J, dim W = 22) | `VertexLattice.lean` (`exists_rep`), `Rank.lean` (`finrank_W`) |
+| 2 | y and the maximal even overlattice | **formal** (Lemmas y, max (a)–(c), V; existence by Zorn; `(eq:adm)` for every x ∈ N^#) | `VertexLattice.lean` (`eq_adm`, `graph_to_eq_adm`) |
+| 3 | discriminant forms / the two genera | **formal except** Milgram's formula (hypothesis `Milgram`) and the identification of D(N) with a finite candidate form | `DiscForm.lean`, `Gauss17.lean`, `FiniteForms.lean` |
+| 4 | gluing dictionaries | not formalised (fields of `Config`, `GenusIHost.adm`) | — |
+| 5 | geometric genus-I reduction to A₁²⁴ | **partly formal**: Lemma A1 geometric, roots of A₁²⁴, coordinate normalisation; E2 itself (Niemeier, Golay weights) remains a hypothesis | `GenusIReduce.lean` |
+| 6 | frame identity (E3) | not formalised (hypothesis of `theoremA`) | — |
+| 7 | 7-design property (E4) | not formalised (hypothesis of `theoremB`) | — |
+| 8 | final graph-to-host assembly | not formalised; the graph side (`(eq:adm)` on N^#) is now a theorem, the missing links are groups 3(a,b), 4, 5 (E2), 6, 7 | — |
+
+Remaining unformalised steps, in one list: Milgram's formula; D(N) as a finite quadratic module ≅ candidate;
+gluing (Lemmas `lem:glue`, `lem:test`, Prop `prop:dict`); E2; E3; E4; the assembly theorem.

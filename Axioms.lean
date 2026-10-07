@@ -83,3 +83,4 @@ open Srg154
 #print axioms lemA1_geom
 #print axioms A1_24_roots
 #print axioms genusI_impossible_general
+#print axioms finrank_W

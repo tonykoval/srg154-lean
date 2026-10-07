@@ -12,3 +12,4 @@ import Srg154.DiscForm
 import Srg154.Gauss17
 import Srg154.FiniteForms
 import Srg154.GenusIReduce
+import Srg154.Rank
