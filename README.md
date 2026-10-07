@@ -117,3 +117,17 @@ Srg154/        the 9 source files
 tools/         build.sh, check.sh (docker helpers), gen_tables.py, compare_pairs.py, pairs521_lean.txt,
                dump.lean, ctrl_eval.lean, neg_test.sh, axioms_output.txt
 ```
+
+## Independent review (2026-10-07)
+An independent review (Codex, report `docs/codex_review_srg154_lean_2026_10_07.md` in the orbit-gen repository, commit
+c75d9e4) rebuilt this project from a fresh copy (`lake exe cache get` + `lake build`: PASS), reproduced all 35 axiom
+audits, and found no blocking defect. Verdict: **a sound conditional formalization of the core, not a full formal
+nonexistence proof.** It showed that the hypothesis bundles of `theoremA` and `theoremB` are satisfiable (explicit
+rooted and rootless configurations), so the conclusions are not vacuous. Clarifications from the review:
+- `dual_vector_witness` gives a witness for the admissibility conditions *conditional on the representation and
+  integrality data*; it does not formalize the whole of (eq:adm) from a graph.
+- `FrameIdentity` does not encode the uniqueness of antipodal pairs, and only the pins used by Theorems A/B are exported.
+  These are safe weakenings (they only strengthen the formal conclusions).
+- Not formalized (eight groups): PSD representation and vertex lattice; y and the maximal even overlattice;
+  discriminant forms / the two genera; gluing dictionaries; the geometric genus-I reduction to A1^24; the frame identity
+  (E3); the 7-design property (E4); the final graph-to-host assembly.
