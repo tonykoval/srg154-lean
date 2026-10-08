@@ -17,7 +17,7 @@ Status (2026-10-07): **all files compile, 0 `sorry`, 0 `admit`, 0 `native_decide
 ```bash
 lake exe cache get     # downloads the Mathlib build cache (~9000 files); do NOT build Mathlib from source
 lake build             # builds the 15 project files + root module
-lake env lean Axioms.lean   # prints the axioms of the 73 audited theorems
+lake env lean Axioms.lean   # prints the axioms of the 76 audited theorems
 ```
 
 Build time of the project after the cache download: **about 90–110 s** on 4 cores (92–108 s in a fresh directory) (x86_64 Linux, docker
@@ -49,6 +49,7 @@ Every audited theorem depends only on `[propext, Classical.choice, Quot.sound]` 
 | `Srg154/Gauss17.lean` | Prop `prop:forms`, "Gauss sum of ⟨10/17⟩ is −√17" | `gauss17`: ∑_{x mod 17} e^{πi·10x²/17} = −√17 (**proved**: S² = 17 by character orthogonality with Mathlib's `ZMod.stdAddChar`, sign by cosine bounds Re S ≤ 3 < √17). So Br⟨10/17⟩ = 4 is not a hypothesis. |
 | `Srg154/FiniteForms.lean` | Prop `prop:forms`, Milgram step | Finite model `Cand` = (dim D₂, dim D₃, the 𝔽₃-form of D₃), `Valid` = the vector-level facts of DiscForm; `gaussTotal` = the Gauss sum of D₂⊕D₃⊕⟨10/17⟩ in ℂ; `Milgram c` = Milgram's formula with signature 22 (**hypothesis**: not in Mathlib). `classification_finite` (kernel exhaustion over 243 candidates), `milgram_int`, **`forms_classification`**: Valid + Milgram ⇒ form (I) ⟨2/3⟩⊕⟨10/17⟩ or form (II) V₂⊕⟨4/3⟩⊕⟨10/17⟩; `det_cases`: \|D\| ∈ {51, 204}; `formI_milgram`, `formII_milgram`: both satisfy Milgram (so exactly two). |
 | `Srg154/GenusIReduce.lean` | Lemma `lem:A1`, start of Thm `thm:genusI` | `lemA1_geom`: Lemma `lem:A1` in any real inner product space (α = 0, β ∈ {0,±1,±3}). `A1_24_roots`: the roots of the A₁²⁴ model are ±√2eᵢ, from the code weights alone. `genusI_impossible_general`: Theorem `thm:genusI` for an ARBITRARY root r of the model (the renumbering/sign change "r = √2e₁" is done in Lean, the code replaced by its image). |
+| `Srg154/Exports.lean` | `(eq:adm)` with `Admissible`; Lemma `lem:A1` hypothesis | Contributed by the independent review C30 (Codex). `full_admissibility`: from the graph, every **nonzero** x ∈ N^# gives (m, ℓ) with the FULL predicate `Admissible` (side conditions included, not only `HasWitness`). `dual_has_nontrivial_class`: y ∈ N^# ∖ N. `root_projection_nonzero`: π(ρ) ≠ 0 for every norm-2 ρ ≠ ±r, the explicit hypothesis of `lemA1_geom`, derived from the Gram data. |
 | `Srg154.lean`, `Axioms.lean` | | root import; axiom audit |
 
 ## What is assumed (hypotheses, never axioms)
@@ -157,12 +158,14 @@ rooted and rootless configurations), so the conclusions are not vacuous. Clarifi
 |---|---|---|---|
 | 1 | PSD representation and vertex lattice | **formal** (vectors exist, Gram −A+2I+2J, dim W = 22) | `VertexLattice.lean` (`exists_rep`), `Rank.lean` (`finrank_W`) |
 | 2 | y and the maximal even overlattice | **formal** (Lemmas y, max (a)–(c), V; existence by Zorn; `(eq:adm)` for every x ∈ N^#) | `VertexLattice.lean` (`eq_adm`, `graph_to_eq_adm`) |
-| 3 | discriminant forms / the two genera | **formal except** Milgram's formula (hypothesis `Milgram`) and the identification of D(N) with a finite candidate form | `DiscForm.lean`, `Gauss17.lean`, `FiniteForms.lean` |
+| 3 | discriminant forms / the two candidate forms | **formal except** Milgram's formula (hypothesis `Milgram`) and the identification of D(N) with a finite candidate form | `DiscForm.lean`, `Gauss17.lean`, `FiniteForms.lean` |
 | 4 | gluing dictionaries | not formalised (fields of `Config`, `GenusIHost.adm`) | — |
 | 5 | geometric genus-I reduction to A₁²⁴ | **partly formal**: Lemma A1 geometric, roots of A₁²⁴, coordinate normalisation; E2 itself (Niemeier, Golay weights) remains a hypothesis | `GenusIReduce.lean` |
 | 6 | frame identity (E3) | not formalised (hypothesis of `theoremA`) | — |
 | 7 | 7-design property (E4) | not formalised (hypothesis of `theoremB`) | — |
 | 8 | final graph-to-host assembly | not formalised; the graph side (`(eq:adm)` on N^#) is now a theorem, the missing links are groups 3(a,b), 4, 5 (E2), 6, 7 | — |
 
-Remaining unformalised steps, in one list: Milgram's formula; D(N) as a finite quadratic module ≅ candidate;
+Remaining unformalised steps, in one list: Milgram's formula; D(N) as a finite quadratic module ≅ candidate, and the
+identification of the two candidate discriminant forms with genera of lattices (`det_cases` counts candidate
+cardinalities, it is not a determinant theorem about N);
 gluing (Lemmas `lem:glue`, `lem:test`, Prop `prop:dict`); E2; E3; E4; the assembly theorem.
