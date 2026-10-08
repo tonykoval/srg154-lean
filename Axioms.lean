@@ -84,3 +84,7 @@ open Srg154
 #print axioms A1_24_roots
 #print axioms genusI_impossible_general
 #print axioms finrank_W
+-- Group 6: literal exports (Exports.lean, from review C30)
+#print axioms Srg154.Exports.full_admissibility
+#print axioms Srg154.Exports.dual_has_nontrivial_class
+#print axioms Srg154.Exports.root_projection_nonzero

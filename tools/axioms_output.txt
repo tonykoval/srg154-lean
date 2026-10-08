@@ -71,3 +71,6 @@
 'Srg154.A1_24_roots' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Srg154.genusI_impossible_general' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Srg154.finrank_W' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Srg154.Exports.full_admissibility' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Srg154.Exports.dual_has_nontrivial_class' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Srg154.Exports.root_projection_nonzero' depends on axioms: [propext, Classical.choice, Quot.sound]
